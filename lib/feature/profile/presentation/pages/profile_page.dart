@@ -149,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title,
           style: GoogleFonts.manrope(
             fontSize: 12,
-            color: Colors.grey,
+            color: Color(0xFF6F767E),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: GoogleFonts.manrope(
             fontSize: 14,
             color: Colors.white,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
         if (showDivider)
