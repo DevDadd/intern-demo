@@ -18,10 +18,15 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: const Icon(Icons.arrow_back_ios, color: Colors.grey, size: 24),
-        actions: const [
+        actions: [
           Padding(
             padding: EdgeInsets.only(right: 13),
-            child: Icon(Icons.password, color: Colors.grey, size: 24),
+            child: Image.asset(
+              "assets/icons/password.png",
+              height: 17.5,
+              width: 21.5,
+              color: Color(0xFF6F767E),
+            ),
           ),
         ],
       ),
@@ -66,7 +71,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Icon(Icons.edit_outlined, color: Colors.grey),
+                        Image.asset(
+                          "assets/icons/pen.png",
+                          height: 14.58,
+                          width: 17.92,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -131,6 +140,27 @@ class _ProfilePageState extends State<ProfilePage> {
                   infoRow("Tỉnh/Thành phố", "Hà Nội"),
                   infoRow("Điện thoại di động", "0969387963"),
                   infoRow("Email", "putin@gmail.com"),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/icons/pen.png",
+                        color: Color(0xFF1AAF74),
+                      ),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "Thay đổi thông tin",
+                          style: GoogleFonts.manrope(
+                            color: Color(0xFF1AAF74),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -163,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         if (showDivider)
-          const Divider(color: Colors.grey, thickness: 0.3, height: 16),
+          const Divider(color: Colors.grey, thickness: 0.5, height: 16),
       ],
     );
   }
