@@ -1,9 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:interndemo/core/router/go_router.dart';
 import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
 import 'package:interndemo/feature/profile/cubit/user_state.dart';
 import 'package:interndemo/feature/profile/data/model/user.dart';
@@ -42,6 +42,86 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _cityController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
+  DateTime datetime = DateTime.now();
+  void _showCupertinoDatePicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        height: 350,
+        color: Colors.black87,
+        child: Column(
+          children: [
+            // Thanh top chỉ có nút X
+            SizedBox(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CupertinoButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+            ),
+
+            // Picker
+            Expanded(
+              child: CupertinoTheme(
+                data: const CupertinoThemeData(
+                  brightness: Brightness.dark,
+                  textTheme: CupertinoTextThemeData(
+                    dateTimePickerTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                child: CupertinoDatePicker(
+                  backgroundColor: Colors.black87,
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: datetime,
+                  minimumYear: 1900,
+                  maximumYear: DateTime.now().year,
+                  onDateTimeChanged: (DateTime newDate) {
+                    setState(() {
+                      datetime = newDate;
+                    });
+                  },
+                ),
+              ),
+            ),
+
+            GestureDetector(
+              onTap: () {
+                _dateController.text =
+                    "${datetime.day.toString().padLeft(2, '0')}-${datetime.month.toString().padLeft(2, '0')}-${datetime.year}";
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(12),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.greenAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -54,7 +134,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _phoneController = TextEditingController(text: widget.phone);
     _emailController = TextEditingController(text: widget.gmail);
 
-    // Listener để rebuild khi text thay đổi
     _idController.addListener(() => setState(() {}));
     _dateController.addListener(() => setState(() {}));
     _placeController.addListener(() => setState(() {}));
@@ -220,6 +299,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         controller: _dateController,
                         label: "Ngày Cấp",
                         suffix: SvgPicture.asset("assets/icons/calender.svg"),
+                        onSuffixTap: () {
+                          _showCupertinoDatePicker();
+                        },
                       ),
                       const SizedBox(height: 5),
                       CustomBox(
@@ -233,7 +315,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(height: 10),
                       if (_idController.text != widget.idCard ||
                           _dateController.text != widget.date ||
-                          _addressController.text != widget.address)
+                          _placeController.text != widget.place)
                         Row(
                           children: [
                             Expanded(
@@ -254,7 +336,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   width: 77,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: const Color(0xFF1AAF74).withAlpha(10),
+                                    color: const Color(
+                                      0xFF1AAF74,
+                                    ).withAlpha(10),
                                   ),
                                 ),
                                 SvgPicture.asset("assets/icons/camera.svg"),
