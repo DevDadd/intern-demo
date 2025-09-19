@@ -7,4 +7,10 @@ class UserCubit extends Cubit<UserState> {
   void addUser(User user) {
     emit(state.copyWith(user: user));
   }
+  User? getUser(){
+    return state.user;
+  }
+  void updateUser(User updateUser){
+    emit(state.copyWith(user: updateUser));
+  }
 }

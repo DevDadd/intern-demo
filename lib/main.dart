@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interndemo/core/di/di.dart';
-import 'package:interndemo/feature/profile/presentation/pages/profile_page.dart';
-import 'package:interndemo/feature/profile/presentation/provider/profile_page_provider.dart';
+import 'package:interndemo/core/router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: ProfilePageProvider(),
+      routerConfig: AppRoutes().router,
     );
   }
 }

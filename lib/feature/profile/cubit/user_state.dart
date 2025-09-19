@@ -10,6 +10,10 @@ part 'user_state.g.dart';
 class UserState extends Equatable {
   const UserState({this.user});
   final User? user;
+  factory UserState.fromJson(Map<String, dynamic> json) =>
+    _$UserStateFromJson(json);
+
+Map<String, dynamic> toJson() => _$UserStateToJson(this);
   @override
   List<Object?> get props => [user];
 }
