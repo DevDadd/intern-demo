@@ -6,7 +6,7 @@ class CustomBox extends StatefulWidget {
   final String label;
   final Widget? suffix;
   final int minLines;
-  final VoidCallback? onSuffixTap; // callback khi bấm suffix
+  final VoidCallback? onSuffixTap;
 
   const CustomBox({
     super.key,
