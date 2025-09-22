@@ -7,6 +7,7 @@ class CustomBox extends StatefulWidget {
   final Widget? suffix;
   final int minLines;
   final VoidCallback? onSuffixTap;
+  final bool isRequired;
 
   const CustomBox({
     super.key,
@@ -15,6 +16,7 @@ class CustomBox extends StatefulWidget {
     this.suffix,
     this.minLines = 1,
     this.onSuffixTap,
+    this.isRequired = true,
   });
 
   @override
@@ -31,6 +33,9 @@ class _CustomBoxState extends State<CustomBox> {
     _focusNode.addListener(() {
       setState(() {});
     });
+    widget.controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -42,6 +47,8 @@ class _CustomBoxState extends State<CustomBox> {
   @override
   Widget build(BuildContext context) {
     final isFocused = _focusNode.hasFocus;
+    final isEmpty = widget.controller.text.trim().isEmpty;
+    final hasError = widget.isRequired && isEmpty && !isFocused;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +56,7 @@ class _CustomBoxState extends State<CustomBox> {
         Text(
           widget.label,
           style: GoogleFonts.manrope(
-            color: Colors.white70,
+            color: hasError ? Colors.red : Colors.white70,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -60,7 +67,11 @@ class _CustomBoxState extends State<CustomBox> {
             color: const Color(0xFF272B30),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isFocused ? const Color(0xFF1AAF74) : Colors.transparent,
+              color: hasError
+                  ? Colors.red
+                  : isFocused
+                  ? const Color(0xFF1AAF74)
+                  : Colors.transparent,
               width: 2,
             ),
           ),
@@ -101,6 +112,17 @@ class _CustomBoxState extends State<CustomBox> {
             ],
           ),
         ),
+        if (hasError) ...[
+          const SizedBox(height: 4),
+          Text(
+            'Trường này là bắt buộc',
+            style: GoogleFonts.manrope(
+              color: Colors.red,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
       ],
     );
   }

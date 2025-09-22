@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       vsync: this,
     );
 
-    _avatarScaleAnimation = Tween<double>(begin: 1.0, end: 0.45).animate(
+    _avatarScaleAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
       CurvedAnimation(
         parent: _avatarAnimationController,
         curve: Curves.easeInOut,
@@ -262,23 +262,26 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     child: Row(
                       children: [
-                        AnimatedBuilder(
-                          animation: _avatarScaleAnimation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _avatarScaleAnimation.value,
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: const Color(0xFF1AAF74),
-                                child: const CircleAvatar(
-                                  radius: 22,
-                                  backgroundImage: AssetImage(
-                                    "assets/avatar.jpg.webp",
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30),
+                          child: AnimatedBuilder(
+                            animation: _avatarScaleAnimation,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: _avatarScaleAnimation.value,
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: const Color(0xFF1AAF74),
+                                  child: const CircleAvatar(
+                                    radius: 22,
+                                    backgroundImage: AssetImage(
+                                      "assets/avatar.jpg.webp",
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
