@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Image.asset("assets/profile.png", fit: BoxFit.cover),
 
               Padding(
-                padding: const EdgeInsets.only(top: 100), // chừa chỗ cho AppBar
+                padding: const EdgeInsets.only(top: 100),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -65,7 +65,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: const CircleAvatar(
                             backgroundColor: Colors.green,
                             radius: 90,
-                            backgroundImage: AssetImage("assets/avatar.jpg.webp"),
+                            backgroundImage: AssetImage(
+                              "assets/avatar.jpg.webp",
+                            ),
                           ),
                         ),
                       ),
@@ -135,16 +137,46 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                ProfileWidget(title: "Tên chủ TK", value: user.name),
-                                ProfileWidget(title: "Giới tính", value: user.sex),
-                                ProfileWidget(title: "Ngày sinh", value: user.dob),
-                                ProfileWidget(title: "Số CMND/CCCD/HC", value: user.idCard),
-                                ProfileWidget(title: "Ngày cấp", value: user.date),
-                                ProfileWidget(title: "Nơi cấp", value: user.placeID),
-                                ProfileWidget(title: "Địa chỉ liên hệ", value: user.contactAdress),
-                                ProfileWidget(title: "Tỉnh/Thành phố", value: user.city),
-                                ProfileWidget(title: "Điện thoại di động", value: user.phone),
-                                ProfileWidget(title: "Email", value: user.email),
+                                ProfileWidget(
+                                  title: "Tên chủ TK",
+                                  value: user.name,
+                                ),
+                                ProfileWidget(
+                                  title: "Giới tính",
+                                  value: user.sex,
+                                ),
+                                ProfileWidget(
+                                  title: "Ngày sinh",
+                                  value: user.dob,
+                                ),
+                                ProfileWidget(
+                                  title: "Số CMND/CCCD/HC",
+                                  value: user.idCard,
+                                ),
+                                ProfileWidget(
+                                  title: "Ngày cấp",
+                                  value: user.date,
+                                ),
+                                ProfileWidget(
+                                  title: "Nơi cấp",
+                                  value: user.placeID,
+                                ),
+                                ProfileWidget(
+                                  title: "Địa chỉ liên hệ",
+                                  value: user.contactAdress,
+                                ),
+                                ProfileWidget(
+                                  title: "Tỉnh/Thành phố",
+                                  value: user.city,
+                                ),
+                                ProfileWidget(
+                                  title: "Điện thoại di động",
+                                  value: user.phone,
+                                ),
+                                ProfileWidget(
+                                  title: "Email",
+                                  value: user.email,
+                                ),
                                 const SizedBox(height: 20),
 
                                 Padding(
@@ -181,7 +213,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // AppBar pin cố định
               SafeArea(
                 child: Container(
                   height: 60,
