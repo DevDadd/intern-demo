@@ -6,6 +6,7 @@ import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
 import 'package:interndemo/feature/profile/data/model/user.dart';
 import 'package:interndemo/feature/profile/presentation/pages/edit_profile_page.dart';
 import 'package:interndemo/feature/profile/presentation/pages/profile_page.dart';
+import 'package:interndemo/feature/profile/presentation/pages/test_animation.dart';
 
 class AppRouteConstant {
   AppRouteConstant._();
@@ -13,6 +14,7 @@ class AppRouteConstant {
   static const String initial = '/';
   static const String profilepage = '/profile-page';
   static const String editProfilePage = '/edit-profile-page';
+  static const String testAnimation = '/test-animation';
 
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
@@ -35,7 +37,7 @@ class AppRoutes {
         path: AppRouteConstant.initial,
         builder: (BuildContext context, GoRouterState state) {
           final UserCubit userCubit = getIt.get();
-          return BlocProvider.value(value: userCubit, child: ProfilePage());
+          return BlocProvider.value(value: userCubit, child: TestAnimation());
         },
       ),
       GoRoute(
