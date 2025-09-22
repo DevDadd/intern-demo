@@ -37,7 +37,7 @@ class AppRoutes {
         path: AppRouteConstant.initial,
         builder: (BuildContext context, GoRouterState state) {
           final UserCubit userCubit = getIt.get();
-          return BlocProvider.value(value: userCubit, child: TestAnimation());
+          return BlocProvider.value(value: userCubit, child: ProfilePage());
         },
       ),
       GoRoute(

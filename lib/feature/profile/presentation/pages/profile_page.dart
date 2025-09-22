@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
+import 'package:interndemo/feature/profile/cubit/user_state.dart';
+import 'package:interndemo/feature/profile/data/model/user.dart';
+import 'package:interndemo/feature/profile/presentation/widget/profile_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,29 +16,178 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
+  void initState() {
+    super.initState();
+    context.read<UserCubit>().addUser(
+      User(
+        name: "Vladimir Putin",
+        sex: "Nam",
+        dob: "04-14-1992",
+        idCard: "992391381",
+        date: "02-02-2000",
+        placeID: "Moscow",
+        contactAdress: "Số 1 Phố Hàng Trống",
+        city: "Hanoi",
+        phone: "099931321",
+        email: "putin@gmail.com",
+      ),
+    );
+    context.read<UserCubit>().getUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Background image
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              "assets/profile.png",
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          // Content on top
-          Positioned.fill(
-            child: Column(
-              children: [
-                SafeArea(
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        final user = state.user;
+        if (user == null) return const SizedBox();
+
+        return Scaffold(
+          backgroundColor: const Color(0xFF111315),
+          body: Stack(
+            children: [
+              Image.asset("assets/profile.png", fit: BoxFit.cover),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 100), // chừa chỗ cho AppBar
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Container(
+                          width: 180,
+                          height: 180,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.green, width: 4),
+                          ),
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.green,
+                            radius: 90,
+                            backgroundImage: AssetImage("assets/avatar.jpg.webp"),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            user.name,
+                            style: GoogleFonts.manrope(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Image.asset("assets/icons/pen.png"),
+                        ],
+                      ),
+                      const SizedBox(height: 8.5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            user.idCard,
+                            style: GoogleFonts.manrope(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            height: 6,
+                            width: 6,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color(0xFF1AAF74),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Đang hoạt động",
+                            style: GoogleFonts.manrope(
+                              color: const Color(0xFF1AAF74),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 22),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFF1A1D1F),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ProfileWidget(title: "Tên chủ TK", value: user.name),
+                                ProfileWidget(title: "Giới tính", value: user.sex),
+                                ProfileWidget(title: "Ngày sinh", value: user.dob),
+                                ProfileWidget(title: "Số CMND/CCCD/HC", value: user.idCard),
+                                ProfileWidget(title: "Ngày cấp", value: user.date),
+                                ProfileWidget(title: "Nơi cấp", value: user.placeID),
+                                ProfileWidget(title: "Địa chỉ liên hệ", value: user.contactAdress),
+                                ProfileWidget(title: "Tỉnh/Thành phố", value: user.city),
+                                ProfileWidget(title: "Điện thoại di động", value: user.phone),
+                                ProfileWidget(title: "Email", value: user.email),
+                                const SizedBox(height: 20),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          "assets/icons/pen.png",
+                                          color: const Color(0xFF1AAF74),
+                                        ),
+                                        const SizedBox(width: 11.2),
+                                        Text(
+                                          "Thay đổi thông tin",
+                                          style: GoogleFonts.manrope(
+                                            fontWeight: FontWeight.w700,
+                                            color: const Color(0xFF1AAF74),
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+              ),
+
+              // AppBar pin cố định
+              SafeArea(
+                child: Container(
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     children: [
-                      const SizedBox(width: 12),
                       const Icon(
                         Icons.arrow_back_ios,
                         color: Color(0xFF6F767E),
@@ -50,41 +204,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: Image.asset(
-                          "assets/icons/password.png",
-                          height: 24,
-                          width: 24,
-                        ),
+                      Image.asset(
+                        "assets/icons/password.png",
+                        height: 24,
+                        width: 24,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                Center(
-                  child: Container(
-                    width: 188,
-                    height: 188,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.green,
-                        width: 4,
-                      ),
-                    ),
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.green,
-                      radius: 90,
-                      backgroundImage: AssetImage("assets/avatar.jpg.webp"),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
