@@ -35,7 +35,11 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     double nameFontSize = 16 + (24 - 16) * sizeFactor;
 
     return Container(
-      color: Colors.transparent,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        image: DecorationImage(image: AssetImage("assets/profile.png"),fit: BoxFit.cover),
+      ),
       child: Column(
         children: [
           const SizedBox(height: 20),

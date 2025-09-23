@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_updatePositon);
+    // _scrollController.addListener(_updatePositon);
     context.read<UserCubit>().addUser(
       User(
         name: "Vladimir Putin",
@@ -64,11 +64,11 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: const Color(0xFF111315),
           body: Stack(
             children: [
-              Image.asset(
-                "assets/profile.png",
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
+              // Image.asset(
+              //   "assets/profile.png",
+              //   fit: BoxFit.cover,
+              //   width: double.infinity,
+              // ),
               Column(
                 children: [
                   SafeArea(
@@ -117,58 +117,64 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           pinned: true,
                         ),
+                        // Dùng SliverPadding + SliverList để scroll mượt
                         SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          sliver: SliverToBoxAdapter(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: const Color(0xFF1A1D1F),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
-                                ),
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  itemCount: items.length + 1,
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 8),
-                                  itemBuilder: (context, index) {
-                                    if (index < items.length) {
-                                      return ProfileWidget(
-                                        title: items[index]["title"]!,
-                                        value: items[index]["value"]!,
-                                      );
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 20, bottom: 30),
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Image.asset(
-                                              "assets/icons/pen.png",
-                                              color: const Color(0xFF1AAF74),
+                          sliver: SliverList.builder(
+                            itemCount: items.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                // Bọc tất cả item trong 1 container
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: const Color(0xFF1A1D1F),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 12),
+                                    child: Column(
+                                      children: [
+                                        for (final item in items)
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 8),
+                                            child: ProfileWidget(
+                                              title: item["title"]!,
+                                              value: item["value"]!,
                                             ),
-                                            const SizedBox(width: 11.2),
-                                            Text(
-                                              "Thay đổi thông tin",
-                                              style: GoogleFonts.manrope(
-                                                fontWeight: FontWeight.w700,
-                                                color: const Color(0xFF1AAF74),
-                                                fontSize: 14,
-                                              ),
+                                          ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 20, bottom: 30),
+                                          child: Center(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.asset(
+                                                  "assets/icons/pen.png",
+                                                  color: const Color(0xFF1AAF74),
+                                                ),
+                                                const SizedBox(width: 11.2),
+                                                Text(
+                                                  "Thay đổi thông tin",
+                                                  style: GoogleFonts.manrope(
+                                                    fontWeight: FontWeight.w700,
+                                                    color:
+                                                        const Color(0xFF1AAF74),
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
                           ),
                         ),
                       ],
@@ -183,17 +189,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> _updatePositon() async {
-    final offset = _scrollController.offset;
-    if (offset > _maxHeight) {
-      await _scrollController.animateTo(
-        _maxHeight,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-      );
-    }
-    if (_scrollController.offset > _maxHeight) {
-      _scrollController.jumpTo(_maxHeight);
-    }
-  }
+  // Future<void> _updatePositon() async {
+  //   final offset = _scrollController.offset;
+  //   if (offset > _maxHeight) {
+  //     await _scrollController.animateTo(
+  //       _maxHeight,
+  //       duration: const Duration(milliseconds: 200),
+  //       curve: Curves.easeOut,
+  //     );
+  //   }
+  //   if (_scrollController.offset > _maxHeight) {
+  //     _scrollController.jumpTo(_maxHeight);
+  //   }
+  // }
 }
