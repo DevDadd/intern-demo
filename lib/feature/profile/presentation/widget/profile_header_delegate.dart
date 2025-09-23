@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:interndemo/feature/profile/data/model/user.dart';
 
 class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final double expandedHeight;
-  final User user;
+  final double maxHeight;
+  final double minHeight;
+  final String name;
+  final String idCard;
+  final String avatarPath;
 
-  ProfileHeaderDelegate({required this.expandedHeight, required this.user});
+  ProfileHeaderDelegate({
+    required this.maxHeight,
+    required this.minHeight,
+    required this.name,
+    required this.idCard,
+    required this.avatarPath,
+  });
 
   @override
-  double get minExtent => kToolbarHeight + 16;
+  double get minExtent => minHeight;
+
   @override
-  double get maxExtent => expandedHeight;
+  double get maxExtent => maxHeight;
 
   @override
   Widget build(
@@ -19,89 +28,92 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    final progress = shrinkOffset / (maxExtent - minExtent);
-    final avatarSize = 120 - (80 * progress); // 120 -> 40
-    final avatarTop = (expandedHeight / 2 - 60) * (1 - progress) + 8;
-    final avatarLeft = 16 * progress;
+    double sizeFactor = 1 - shrinkOffset / (maxHeight - minHeight);
+    sizeFactor = sizeFactor.clamp(0.0, 1.0);
 
-    final infoLeft = avatarLeft + avatarSize + 12;
-    final infoTop = avatarTop + 20 * progress;
+    double avatarSize = 180 * sizeFactor + 60;
+    double nameFontSize = 16 + (24 - 16) * sizeFactor;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset("assets/profile.png", fit: BoxFit.cover),
-        // Avatar
-        Positioned(
-          top: avatarTop,
-          left: avatarLeft,
-          child: Container(
-            width: avatarSize,
-            height: avatarSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.green, width: 4),
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.green,
-              backgroundImage: AssetImage("assets/avatar.jpg.webp"),
+    return Container(
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Center(
+            child: Container(
+              width: avatarSize,
+              height: avatarSize,
+              decoration: BoxDecoration(
+                color: Colors.red,
+
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green, width: 4),
+              ),
+              child: CircleAvatar(
+                backgroundColor: Colors.green,
+                backgroundImage: AssetImage(avatarPath),
+              ),
             ),
           ),
-        ),
-        // Info
-        Positioned(
-          top: infoTop,
-          left: infoLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                user.name,
+                name,
                 style: GoogleFonts.manrope(
                   color: Colors.white,
-                  fontSize: 24 - 8 * progress,
+                  fontSize: nameFontSize,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    user.idCard,
-                    style: GoogleFonts.manrope(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Container(
-                    height: 6,
-                    width: 6,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFF1AAF74),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    "Đang hoạt động",
-                    style: GoogleFonts.manrope(
-                      color: Color(0xFF1AAF74),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 8),
+              Image.asset("assets/icons/pen.png"),
+            ],
+          ),
+          const SizedBox(height: 8.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                idCard,
+                style: GoogleFonts.manrope(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                height: 6,
+                width: 6,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF1AAF74),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Đang hoạt động",
+                style: GoogleFonts.manrope(
+                  color: const Color(0xFF1AAF74),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   @override
   bool shouldRebuild(covariant ProfileHeaderDelegate oldDelegate) {
-    return oldDelegate.user != user ||
-        oldDelegate.expandedHeight != expandedHeight;
+    return name != oldDelegate.name ||
+        idCard != oldDelegate.idCard ||
+        avatarPath != oldDelegate.avatarPath ||
+        maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight;
   }
 }
