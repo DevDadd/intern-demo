@@ -16,9 +16,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _scrollController = ScrollController();
+  final _maxHeight = 200.0;
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_updatePositon);
     context.read<UserCubit>().addUser(
       User(
         name: "Vladimir Putin",
@@ -47,11 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: const Color(0xFF111315),
           body: Stack(
             children: [
-              Image.asset(
-                "assets/profile.png",
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
+              Image.asset("assets/profile.png", fit: BoxFit.cover, width: double.infinity),
               Column(
                 children: [
                   SafeArea(
@@ -60,11 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.arrow_back_ios,
-                            color: Color(0xFF6F767E),
-                            size: 24,
-                          ),
+                          const Icon(Icons.arrow_back_ios, color: Color(0xFF6F767E), size: 24),
                           const SizedBox(width: 48),
                           Expanded(
                             child: Text(
@@ -76,17 +71,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                          Image.asset(
-                            "assets/icons/password.png",
-                            height: 24,
-                            width: 24,
-                          ),
+                          Image.asset("assets/icons/password.png", height: 24, width: 24),
                         ],
                       ),
                     ),
                   ),
                   Expanded(
                     child: CustomScrollView(
+                      controller: _scrollController,
                       slivers: [
                         SliverPersistentHeader(
                           delegate: ProfileHeaderDelegate(
@@ -100,9 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -110,78 +100,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: const Color(0xFF1A1D1F),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    ProfileWidget(
-                                      title: "Tên chủ TK",
-                                      value: user.name,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Giới tính",
-                                      value: user.sex,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Ngày sinh",
-                                      value: user.dob,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Số CMND/CCCD/HC",
-                                      value: user.idCard,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Ngày cấp",
-                                      value: user.date,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Nơi cấp",
-                                      value: user.placeID,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Địa chỉ liên hệ",
-                                      value: user.contactAdress,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Tỉnh/Thành phố",
-                                      value: user.city,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Điện thoại di động",
-                                      value: user.phone,
-                                    ),
-                                    ProfileWidget(
-                                      title: "Email",
-                                      value: user.email,
-                                    ),
+                                    ProfileWidget(title: "Tên chủ TK", value: user.name),
+                                    ProfileWidget(title: "Giới tính", value: user.sex),
+                                    ProfileWidget(title: "Ngày sinh", value: user.dob),
+                                    ProfileWidget(title: "Số CMND/CCCD/HC", value: user.idCard),
+                                    ProfileWidget(title: "Ngày cấp", value: user.date),
+                                    ProfileWidget(title: "Nơi cấp", value: user.placeID),
+                                    ProfileWidget(title: "Địa chỉ liên hệ", value: user.contactAdress),
+                                    ProfileWidget(title: "Tỉnh/Thành phố", value: user.city),
+                                    ProfileWidget(title: "Điện thoại di động", value: user.phone),
+                                    ProfileWidget(title: "Email", value: user.email),
                                     const SizedBox(height: 20),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 8.0,
-                                      ),
+                                      padding: const EdgeInsets.only(bottom: 8.0),
                                       child: Center(
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Image.asset(
-                                              "assets/icons/pen.png",
-                                              color: const Color(
-                                                0xFF1AAF74,
-                                              ),
-                                            ),
+                                            Image.asset("assets/icons/pen.png", color: const Color(0xFF1AAF74)),
                                             const SizedBox(width: 11.2),
                                             Text(
                                               "Thay đổi thông tin",
                                               style: GoogleFonts.manrope(
-                                                fontWeight:
-                                                    FontWeight.w700,
-                                                color: const Color(
-                                                  0xFF1AAF74,
-                                                ),
+                                                fontWeight: FontWeight.w700,
+                                                color: const Color(0xFF1AAF74),
                                                 fontSize: 14,
                                               ),
                                             ),
@@ -206,5 +152,12 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
+  }
+
+  Future<void> _updatePositon() async {
+    
+    if (_scrollController.offset < 200) {
+      await _scrollController.animateTo(_maxHeight, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+    }
   }
 }
