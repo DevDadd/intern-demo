@@ -222,24 +222,31 @@ class _EditProfilePageState extends State<EditProfilePage>
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () => context.pop(),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.grey, size: 24),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 13),
-            child: Image.asset(
-              "assets/icons/password.png",
-              height: 17.5,
-              width: 21.5,
-              color: const Color(0xFF6F767E),
+      appBar: _isScrolled
+          ? null
+          : AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: GestureDetector(
+                onTap: () => context.pop(),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.grey,
+                  size: 24,
+                ),
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 13),
+                  child: Image.asset(
+                    "assets/icons/password.png",
+                    height: 17.5,
+                    width: 21.5,
+                    color: const Color(0xFF6F767E),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       extendBodyBehindAppBar: true,
       body: Column(
         children: [
@@ -262,28 +269,34 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: AnimatedBuilder(
-                            animation: _avatarScaleAnimation,
-                            builder: (context, child) {
-                              return Transform.scale(
-                                scale: _avatarScaleAnimation.value,
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: const Color(0xFF1AAF74),
-                                  child: const CircleAvatar(
-                                    radius: 22,
-                                    backgroundImage: AssetImage(
-                                      "assets/avatar.jpg.webp",
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                        GestureDetector(
+                          onTap: () => context.pop(),
+                          child: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.grey,
+                            size: 24,
                           ),
                         ),
                         const SizedBox(width: 12),
+                        AnimatedBuilder(
+                          animation: _avatarScaleAnimation,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _avatarScaleAnimation.value,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: const Color(0xFF1AAF74),
+                                child: const CircleAvatar(
+                                  radius: 18,
+                                  backgroundImage: AssetImage(
+                                    "assets/avatar.jpg.webp",
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: AnimatedBuilder(
                             animation: _infoOpacityAnimation,
@@ -337,6 +350,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                                 ),
                               );
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 13),
+                          child: Image.asset(
+                            "assets/icons/password.png",
+                            height: 17.5,
+                            width: 21.5,
+                            color: const Color(0xFF6F767E),
                           ),
                         ),
                       ],
