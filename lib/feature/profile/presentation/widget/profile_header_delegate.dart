@@ -36,7 +36,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: const Color(0xFF111315),
         image: DecorationImage(
           image: AssetImage("assets/bgtheme.png"),
           fit: BoxFit.cover,
