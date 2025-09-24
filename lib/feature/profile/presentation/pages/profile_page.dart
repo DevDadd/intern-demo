@@ -49,8 +49,8 @@ class _ProfilePageState extends State<ProfilePage> {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: ProfileHeaderDelegate(
-                  maxHeight: 450,
-                  minHeight: 230,
+                  maxHeight: 410,
+                  minHeight: 200,
                   name: user.name,
                   avatarPath: "assets/avatar.jpg.webp",
                 ),
@@ -67,9 +67,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
-                        vertical: 12,
+                        vertical: 12, // padding vừa phải
                       ),
                       child: Column(
+                        mainAxisSize:
+                            MainAxisSize.min, // chỉ chiếm đúng nội dung
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ProfileWidget(title: "Tên chủ TK", value: user.name),
@@ -94,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             value: user.phone,
                           ),
                           ProfileWidget(title: "Email", value: user.email),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 12),
                           Center(
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -115,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 8), // giữ chút padding dưới
                         ],
                       ),
                     ),

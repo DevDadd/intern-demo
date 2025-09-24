@@ -26,25 +26,67 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    final double sizeFactor =
-        1 - (shrinkOffset / (maxHeight - minHeight)).clamp(0.0, 1.0);
-    final double avatarSize = 180 * sizeFactor + 60;
-    final double nameFontSize = 16 + (24 - 16) * sizeFactor;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final topPadding = MediaQuery.of(context).padding.top;
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF111315),
-        image: DecorationImage(
-          image: AssetImage("assets/bgtheme.png"),
-          fit: BoxFit.cover,
+    // factor = 1 khi fully expanded, 0 khi collapsed
+    double factor = 1 - (shrinkOffset / (maxHeight - minHeight));
+    factor = factor.clamp(0.0, 1.0);
+
+    // Avatar size: 120 -> 50
+    double avatarSize = 120 * factor + 90;
+
+    // Avatar horizontal: center -> left padding 16
+    double avatarLeft =
+        (screenWidth / 2 - avatarSize / 2) * factor + 16 * (1 - factor);
+
+    // Avatar vertical: expanded top -> collapsed top (dựa trên SafeArea)
+    double avatarTopExpanded = topPadding + 100;
+    double avatarTopCollapsed = topPadding + (minHeight - avatarSize) / 2;
+    double avatarTop =
+        avatarTopExpanded * factor + avatarTopCollapsed * (1 - factor);
+
+    // Info (name + ID + status) horizontal: center dưới avatar -> next to avatar
+    double infoWidth = 200; // approximate width of column
+    double infoLeftExpanded = (screenWidth - infoWidth) / 2;
+    double infoLeftCollapsed = avatarLeft + avatarSize + 12;
+    double infoLeft =
+        infoLeftExpanded * factor + infoLeftCollapsed * (1 - factor);
+
+    // Info vertical: ngay dưới avatar khi expanded, center of avatar khi collapsed
+    double infoTopExpanded = avatarTop + avatarSize + 8;
+    double infoTopCollapsed = avatarTop + (avatarSize - 50) / 2;
+    double infoTop = infoTopExpanded * factor + infoTopCollapsed * (1 - factor);
+
+    // Name font size: 24 -> 16
+    double nameFontSize = 24 + (24 - 24) * factor;
+
+    // Column alignment: center khi expanded, start khi collapsed
+    CrossAxisAlignment infoAlignment = factor > 0.5
+        ? CrossAxisAlignment.center
+        : CrossAxisAlignment.start;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Background
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF111315),
+            image: const DecorationImage(
+              image: AssetImage("assets/bgtheme.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Column(
-          children: [
-            Container(
+
+        // AppBar trong SafeArea
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SafeArea(
+            child: Container(
               height: 60,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -73,75 +115,78 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
-            // Avatar
-            Center(
-              child: Container(
-                width: avatarSize,
-                height: avatarSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.green, width: 4),
-                  image: DecorationImage(
-                    image: AssetImage(avatarPath),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+          ),
+        ),
+
+        // Avatar
+        Positioned(
+          left: avatarLeft,
+          top: avatarTop,
+          child: Container(
+            width: avatarSize,
+            height: avatarSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.green, width: 4),
+              image: DecorationImage(
+                image: AssetImage(avatarPath),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
-            // Name + edit icon
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  name,
-                  style: GoogleFonts.manrope(
-                    color: Colors.white,
-                    fontSize: nameFontSize,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Image.asset("assets/icons/pen.png"),
-              ],
-            ),
-            const SizedBox(height: 8.5),
-            // ID + status
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "0C99231321",
-                  style: GoogleFonts.manrope(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  height: 6,
-                  width: 6,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF1AAF74),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "Đang hoạt động",
-                  style: GoogleFonts.manrope(
-                    color: const Color(0xFF1AAF74),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
-      ),
+
+        // Name + ID + status
+        Positioned(
+          left: infoLeft,
+          top: infoTop,
+          child: Column(
+            crossAxisAlignment: infoAlignment,
+            children: [
+              Text(
+                name,
+                style: GoogleFonts.manrope(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: nameFontSize,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "0C99231321",
+                    style: GoogleFonts.manrope(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    height: 6,
+                    width: 6,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF1AAF74),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Đang hoạt động",
+                    style: GoogleFonts.manrope(
+                      color: const Color(0xFF1AAF74),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
