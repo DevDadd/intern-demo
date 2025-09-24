@@ -31,83 +31,95 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     double sizeFactor = 1 - shrinkOffset / (maxHeight - minHeight);
     sizeFactor = sizeFactor.clamp(0.0, 1.0);
 
-    double avatarSize = 180 * sizeFactor + 60;
+    double avatarSize = 120 * sizeFactor + 40;
     double nameFontSize = 16 + (24 - 16) * sizeFactor;
 
     return Container(
+      height: maxExtent,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.black,
-        image: DecorationImage(image: AssetImage("assets/profile.png"),fit: BoxFit.cover),
+        image: const DecorationImage(
+          image: AssetImage("assets/profile.png"),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          Center(
-            child: Container(
-              width: avatarSize,
-              height: avatarSize,
-              decoration: BoxDecoration(
-                color: Colors.red,
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: avatarSize,
+                    height: avatarSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.green, width: 4),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      backgroundImage: AssetImage(avatarPath),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.green, width: 4),
-              ),
-              child: CircleAvatar(
-                backgroundColor: Colors.green,
-                backgroundImage: AssetImage(avatarPath),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        style: GoogleFonts.manrope(
+                          color: Colors.white,
+                          fontSize: nameFontSize,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Image.asset("assets/icons/pen.png"),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // ID + trạng thái
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        idCard,
+                        style: GoogleFonts.manrope(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        height: 6,
+                        width: 6,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFF1AAF74),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Đang hoạt động",
+                        style: GoogleFonts.manrope(
+                          color: const Color(0xFF1AAF74),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                name,
-                style: GoogleFonts.manrope(
-                  color: Colors.white,
-                  fontSize: nameFontSize,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Image.asset("assets/icons/pen.png"),
-            ],
-          ),
-          const SizedBox(height: 8.5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                idCard,
-                style: GoogleFonts.manrope(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                height: 6,
-                width: 6,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF1AAF74),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "Đang hoạt động",
-                style: GoogleFonts.manrope(
-                  color: const Color(0xFF1AAF74),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
