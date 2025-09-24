@@ -5,14 +5,12 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double maxHeight;
   final double minHeight;
   final String name;
-  final String idCard;
   final String avatarPath;
 
   ProfileHeaderDelegate({
     required this.maxHeight,
     required this.minHeight,
     required this.name,
-    required this.idCard,
     required this.avatarPath,
   });
 
@@ -46,7 +44,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
           children: [
-            // AppBar content
             Container(
               height: 60,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -115,7 +112,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  idCard,
+                  "0C99231321",
                   style: GoogleFonts.manrope(
                     color: Colors.white,
                     fontSize: 14,
@@ -151,7 +148,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant ProfileHeaderDelegate oldDelegate) {
     return name != oldDelegate.name ||
-        idCard != oldDelegate.idCard ||
         avatarPath != oldDelegate.avatarPath ||
         maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight;

@@ -52,7 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   maxHeight: 450,
                   minHeight: 230,
                   name: user.name,
-                  idCard: user.idCard,
                   avatarPath: "assets/avatar.jpg.webp",
                 ),
               ),
