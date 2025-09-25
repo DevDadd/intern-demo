@@ -13,7 +13,7 @@ class CustomBox extends StatefulWidget {
     super.key,
     required this.controller,
     required this.label,
-    this.suffix,
+    required this.suffix,
     this.minLines = 1,
     this.onSuffixTap,
     this.isRequired = true,
@@ -61,7 +61,7 @@ class _CustomBoxState extends State<CustomBox> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         Container(
           decoration: BoxDecoration(
             color: const Color(0xFF272B30),

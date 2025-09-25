@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:interndemo/core/router/go_router.dart';
 import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
 import 'package:interndemo/feature/profile/cubit/user_state.dart';
 import 'package:interndemo/feature/profile/data/model/user.dart';
@@ -108,12 +110,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: const Color(0xFF1AAF74),
                                     ),
                                     const SizedBox(width: 11.2),
-                                    Text(
-                                      "Thay đổi thông tin",
-                                      style: GoogleFonts.manrope(
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF1AAF74),
-                                        fontSize: 14,
+                                    GestureDetector(
+                                      onTap: () {
+                                        context.push(AppRouteConstant.editProfilePage,extra: user);
+                                      },
+                                      child: Text(
+                                        "Thay đổi thông tin",
+                                        style: GoogleFonts.manrope(
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF1AAF74),
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ],
