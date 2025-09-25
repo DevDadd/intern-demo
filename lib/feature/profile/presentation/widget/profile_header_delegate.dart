@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -61,7 +62,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Background
         Container(
           decoration: BoxDecoration(
             color: const Color(0xFF111315),
@@ -82,10 +82,15 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Color(0xFF6F767E),
-                    size: 24,
+                  GestureDetector(
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Color(0xFF6F767E),
+                      size: 24,
+                    ),
                   ),
                   const SizedBox(width: 48),
                   Expanded(

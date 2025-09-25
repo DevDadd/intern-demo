@@ -55,19 +55,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     phoneController = TextEditingController(text: widget.phone);
     gmailController = TextEditingController(text: widget.gmail);
 
-    // 🔑 Thêm listener để rebuild UI khi có thay đổi
     idCardController.addListener(_onFieldChanged);
     dateController.addListener(_onFieldChanged);
     placeController.addListener(_onFieldChanged);
   }
 
   void _onFieldChanged() {
-    setState(() {}); // rebuild để cập nhật hasChanged
+    setState(() {}); 
   }
 
   @override
   void dispose() {
-    // 🔑 Remove listener để tránh memory leak
     idCardController.removeListener(_onFieldChanged);
     dateController.removeListener(_onFieldChanged);
     placeController.removeListener(_onFieldChanged);
