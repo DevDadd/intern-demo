@@ -49,78 +49,83 @@ class _ProfilePageState extends State<ProfilePage> {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: ProfileHeaderDelegate(
-                  maxHeight: 410,
-                  minHeight: 200,
+                  maxHeight: 450,
+                  minHeight: 210,
                   name: user.name,
                   avatarPath: "assets/avatar.jpg.webp",
                 ),
               ),
+
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: const Color(0xFF1A1D1F),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12, // padding vừa phải
-                      ),
-                      child: Column(
-                        mainAxisSize:
-                            MainAxisSize.min, // chỉ chiếm đúng nội dung
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ProfileWidget(title: "Tên chủ TK", value: user.name),
-                          ProfileWidget(title: "Giới tính", value: user.sex),
-                          ProfileWidget(title: "Ngày sinh", value: user.dob),
-                          ProfileWidget(
-                            title: "Số CMND/CCCD/HC",
-                            value: user.idCard,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0xFF1A1D1F),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
                           ),
-                          ProfileWidget(title: "Ngày cấp", value: user.date),
-                          ProfileWidget(title: "Nơi cấp", value: user.placeID),
-                          ProfileWidget(
-                            title: "Địa chỉ liên hệ",
-                            value: user.contactAdress,
-                          ),
-                          ProfileWidget(
-                            title: "Tỉnh/Thành phố",
-                            value: user.city,
-                          ),
-                          ProfileWidget(
-                            title: "Điện thoại di động",
-                            value: user.phone,
-                          ),
-                          ProfileWidget(title: "Email", value: user.email),
-                          const SizedBox(height: 12),
-                          Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  "assets/icons/pen.png",
-                                  color: const Color(0xFF1AAF74),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ProfileWidget(title: "Tên chủ TK", value: user.name),
+                              ProfileWidget(title: "Giới tính", value: user.sex),
+                              ProfileWidget(title: "Ngày sinh", value: user.dob),
+                              ProfileWidget(
+                                title: "Số CMND/CCCD/HC",
+                                value: user.idCard,
+                              ),
+                              ProfileWidget(title: "Ngày cấp", value: user.date),
+                              ProfileWidget(title: "Nơi cấp", value: user.placeID),
+                              ProfileWidget(
+                                title: "Địa chỉ liên hệ",
+                                value: user.contactAdress,
+                              ),
+                              ProfileWidget(
+                                title: "Tỉnh/Thành phố",
+                                value: user.city,
+                              ),
+                              ProfileWidget(
+                                title: "Điện thoại di động",
+                                value: user.phone,
+                              ),
+                              ProfileWidget(title: "Email", value: user.email),
+                              const SizedBox(height: 12),
+                              Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/pen.png",
+                                      color: const Color(0xFF1AAF74),
+                                    ),
+                                    const SizedBox(width: 11.2),
+                                    Text(
+                                      "Thay đổi thông tin",
+                                      style: GoogleFonts.manrope(
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF1AAF74),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 11.2),
-                                Text(
-                                  "Thay đổi thông tin",
-                                  style: GoogleFonts.manrope(
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF1AAF74),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
                           ),
-                          const SizedBox(height: 8), // giữ chút padding dưới
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 34), 
+                    ],
                   ),
                 ),
               ),

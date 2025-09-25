@@ -29,39 +29,31 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     final screenWidth = MediaQuery.of(context).size.width;
     final topPadding = MediaQuery.of(context).padding.top;
 
-    // factor = 1 khi fully expanded, 0 khi collapsed
     double factor = 1 - (shrinkOffset / (maxHeight - minHeight));
     factor = factor.clamp(0.0, 1.0);
 
-    // Avatar size: 120 -> 50
-    double avatarSize = 120 * factor + 90;
+    double avatarSize = 120 * factor + 80;
 
-    // Avatar horizontal: center -> left padding 16
     double avatarLeft =
         (screenWidth / 2 - avatarSize / 2) * factor + 16 * (1 - factor);
 
-    // Avatar vertical: expanded top -> collapsed top (dựa trên SafeArea)
     double avatarTopExpanded = topPadding + 100;
     double avatarTopCollapsed = topPadding + (minHeight - avatarSize) / 2;
     double avatarTop =
         avatarTopExpanded * factor + avatarTopCollapsed * (1 - factor);
 
-    // Info (name + ID + status) horizontal: center dưới avatar -> next to avatar
-    double infoWidth = 200; // approximate width of column
+    double infoWidth = 200; 
     double infoLeftExpanded = (screenWidth - infoWidth) / 2;
-    double infoLeftCollapsed = avatarLeft + avatarSize + 12;
+    double infoLeftCollapsed = avatarLeft + avatarSize + 20;
     double infoLeft =
         infoLeftExpanded * factor + infoLeftCollapsed * (1 - factor);
 
-    // Info vertical: ngay dưới avatar khi expanded, center of avatar khi collapsed
     double infoTopExpanded = avatarTop + avatarSize + 8;
-    double infoTopCollapsed = avatarTop + (avatarSize - 50) / 2;
+    double infoTopCollapsed = avatarTop + (avatarSize - 70) / 2;
     double infoTop = infoTopExpanded * factor + infoTopCollapsed * (1 - factor);
 
-    // Name font size: 24 -> 16
     double nameFontSize = 24 + (24 - 24) * factor;
 
-    // Column alignment: center khi expanded, start khi collapsed
     CrossAxisAlignment infoAlignment = factor > 0.5
         ? CrossAxisAlignment.center
         : CrossAxisAlignment.start;
@@ -80,7 +72,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
 
-        // AppBar trong SafeArea
         Positioned(
           top: 0,
           left: 0,
@@ -118,7 +109,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
 
-        // Avatar
         Positioned(
           left: avatarLeft,
           top: avatarTop,
@@ -136,7 +126,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
 
-        // Name + ID + status
         Positioned(
           left: infoLeft,
           top: infoTop,
