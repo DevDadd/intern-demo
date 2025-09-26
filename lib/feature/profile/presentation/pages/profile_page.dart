@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -52,19 +54,20 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!_scrollController.hasClients) return;
 
     final current = _scrollController.position.pixels;
-    final max = _scrollController.position.maxScrollExtent;
-    final min = _scrollController.position.minScrollExtent;
 
-    if (current < (max - min) / 2) {
+    final double targetCollapsed = Platform.isAndroid ? 250.0 : collapsedOffset;
+    final double targetExpanded = 0.0;
+
+    if (current >= targetCollapsed / 2) {
       _scrollController.animateTo(
-        min,
-        duration: const Duration(milliseconds: 300),
+        targetCollapsed,
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
       );
     } else {
       _scrollController.animateTo(
-        max,
-        duration: const Duration(milliseconds: 300),
+        targetExpanded,
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
       );
     }
@@ -113,16 +116,46 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                ProfileWidget(title: "Tên chủ TK", value: user.name),
-                                ProfileWidget(title: "Giới tính", value: user.sex),
-                                ProfileWidget(title: "Ngày sinh", value: user.dob),
-                                ProfileWidget(title: "Số CMND/CCCD/HC", value: user.idCard),
-                                ProfileWidget(title: "Ngày cấp", value: user.date),
-                                ProfileWidget(title: "Nơi cấp", value: user.placeID),
-                                ProfileWidget(title: "Địa chỉ liên hệ", value: user.contactAdress),
-                                ProfileWidget(title: "Tỉnh/Thành phố", value: user.city),
-                                ProfileWidget(title: "Điện thoại di động", value: user.phone),
-                                ProfileWidget(title: "Email", value: user.email),
+                                ProfileWidget(
+                                  title: "Tên chủ TK",
+                                  value: user.name,
+                                ),
+                                ProfileWidget(
+                                  title: "Giới tính",
+                                  value: user.sex,
+                                ),
+                                ProfileWidget(
+                                  title: "Ngày sinh",
+                                  value: user.dob,
+                                ),
+                                ProfileWidget(
+                                  title: "Số CMND/CCCD/HC",
+                                  value: user.idCard,
+                                ),
+                                ProfileWidget(
+                                  title: "Ngày cấp",
+                                  value: user.date,
+                                ),
+                                ProfileWidget(
+                                  title: "Nơi cấp",
+                                  value: user.placeID,
+                                ),
+                                ProfileWidget(
+                                  title: "Địa chỉ liên hệ",
+                                  value: user.contactAdress,
+                                ),
+                                ProfileWidget(
+                                  title: "Tỉnh/Thành phố",
+                                  value: user.city,
+                                ),
+                                ProfileWidget(
+                                  title: "Điện thoại di động",
+                                  value: user.phone,
+                                ),
+                                ProfileWidget(
+                                  title: "Email",
+                                  value: user.email,
+                                ),
                                 const SizedBox(height: 12),
                                 Center(
                                   child: Row(
@@ -163,7 +196,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: SizedBox(height: 400 - collapsedOffset - 190),
+                  child: SizedBox(
+                    height:
+                        400 -
+                        collapsedOffset -
+                        (Platform.isAndroid ? 150 : 200),
+                  ),
                 ),
               ],
             ),
