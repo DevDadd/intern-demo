@@ -15,7 +15,7 @@ class ProfileWidget extends StatelessWidget {
           title,
           style: GoogleFonts.manrope(
             fontSize: 12,
-            color: Color(0xFF6F767E),
+            color: Color(0xFFFCFCFC),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -24,7 +24,7 @@ class ProfileWidget extends StatelessWidget {
           value,
           style: GoogleFonts.manrope(
             fontSize: 14,
-            color: Colors.white,
+            color: Color(0xFFFCFCFC),
             fontWeight: FontWeight.w500,
           ),
         ),

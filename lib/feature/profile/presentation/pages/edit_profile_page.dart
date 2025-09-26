@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
 import 'package:interndemo/feature/profile/cubit/user_state.dart';
 import 'package:interndemo/feature/profile/data/model/user.dart';
@@ -44,6 +44,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController phoneController;
   late TextEditingController gmailController;
 
+  late ScrollController _scrollController;
+
+  final double collapsedOffset = 210.0; // minHeight của ProfileHeaderDelegate
+
   @override
   void initState() {
     super.initState();
@@ -58,18 +62,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     idCardController.addListener(_onFieldChanged);
     dateController.addListener(_onFieldChanged);
     placeController.addListener(_onFieldChanged);
+
+    _scrollController = ScrollController();
   }
 
-  void _onFieldChanged() {
-    setState(() {}); 
-  }
+  void _onFieldChanged() => setState(() {});
 
   @override
   void dispose() {
-    idCardController.removeListener(_onFieldChanged);
-    dateController.removeListener(_onFieldChanged);
-    placeController.removeListener(_onFieldChanged);
-
     idCardController.dispose();
     dateController.dispose();
     placeController.dispose();
@@ -77,28 +77,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
     cityController.dispose();
     phoneController.dispose();
     gmailController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _showCupertinoDatePicker(BuildContext context) {
-    DateTime selectedDate;
-
+    DateTime selectedDate = DateTime.now();
     if (dateController.text.isNotEmpty) {
       try {
         final parts = dateController.text.split('-');
         if (parts.length == 3) {
-          final day = int.parse(parts[0]);
-          final month = int.parse(parts[1]);
-          final year = int.parse(parts[2]);
-          selectedDate = DateTime(year, month, day);
-        } else {
-          selectedDate = DateTime.now();
+          selectedDate = DateTime(
+            int.parse(parts[2]),
+            int.parse(parts[1]),
+            int.parse(parts[0]),
+          );
         }
-      } catch (e) {
-        selectedDate = DateTime.now();
-      }
-    } else {
-      selectedDate = DateTime.now();
+      } catch (_) {}
     }
 
     showModalBottomSheet(
@@ -107,75 +102,93 @@ class _EditProfilePageState extends State<EditProfilePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (BuildContext builder) {
-        return StatefulBuilder(
-          builder: (context, setStateModal) {
-            return SizedBox(
-              height: 350,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: SvgPicture.asset(
-                            "assets/icons/delete.svg",
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: CupertinoTheme(
-                      data: const CupertinoThemeData(
-                        brightness: Brightness.dark,
-                      ),
-                      child: CupertinoDatePicker(
-                        initialDateTime: selectedDate,
-                        mode: CupertinoDatePickerMode.date,
-                        onDateTimeChanged: (DateTime newDate) {
-                          setStateModal(() => selectedDate = newDate);
-                        },
+      builder: (_) => StatefulBuilder(
+        builder: (context, setStateModal) => SizedBox(
+          height: 350,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: SvgPicture.asset(
+                        "assets/icons/delete.svg",
+                        width: 20,
+                        height: 20,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16, top: 8),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          dateController.text =
-                              "${selectedDate.day.toString().padLeft(2, '0')}-"
-                              "${selectedDate.month.toString().padLeft(2, '0')}-"
-                              "${selectedDate.year}";
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "OK",
-                        style: GoogleFonts.manrope(
-                          color: const Color(0xFF1AAF74),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            );
-          },
-        );
-      },
+              Expanded(
+                child: CupertinoTheme(
+                  data: const CupertinoThemeData(brightness: Brightness.dark),
+                  child: CupertinoDatePicker(
+                    initialDateTime: selectedDate,
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: (date) =>
+                        setStateModal(() => selectedDate = date),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16, top: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      dateController.text =
+                          "${selectedDate.day.toString().padLeft(2, '0')}-"
+                          "${selectedDate.month.toString().padLeft(2, '0')}-"
+                          "${selectedDate.year}";
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "OK",
+                    style: GoogleFonts.manrope(
+                      color: const Color(0xFF1AAF74),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  void _handleSnap() {
+    if (!_scrollController.hasClients) return;
+
+    final current = _scrollController.position.pixels;
+    const double tolerance = 10.0; // dung sai
+    final double targetCollapsed = collapsedOffset + 30; // thêm 10px xuống nữa
+
+    if (current < collapsedOffset / 2) {
+      // Snap về expanded
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    } else if (current >= collapsedOffset / 2 && current < targetCollapsed) {
+      // Snap về collapsed + 10px
+      _scrollController.animateTo(
+        targetCollapsed,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    }
+    // Nếu scroll vượt quá targetCollapsed → để kéo tiếp bình thường
   }
 
   @override
@@ -192,239 +205,353 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
         return Scaffold(
           backgroundColor: const Color(0xFF111315),
-          body: CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: ProfileHeaderDelegate(
-                  maxHeight: 450,
-                  minHeight: 210,
-                  name: user.name,
-                  avatarPath: "assets/avatar.jpg.webp",
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Column(
-                    children: [
-                      // ====== First Box: ID Info ======
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color(0xFF1A1D1F),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              ProfileWidget(
-                                title: "Tên chủ TK",
-                                value: "Vladimir Vladimirovich Putin",
-                              ),
-                              ProfileWidget(
-                                title: "Giới Tính",
-                                value: state.user!.sex,
-                              ),
-                              ProfileWidget(
-                                title: "Ngày Sinh",
-                                value: state.user!.dob,
-                              ),
-                              CustomBox(
-                                controller: idCardController,
-                                label: "Số CMND/CCCD/HC",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Listener(
+              onPointerUp: (_) => _handleSnap(),
+              child: CustomScrollView(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: ProfileHeaderDelegate(
+                      maxHeight: 450,
+                      minHeight: collapsedOffset,
+                      name: user.name,
+                      avatarPath: "assets/avatar.jpg.webp",
+                      collapsedInfoShift: 18,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        children: [
+                          // 🔹 Container CMND/CCCD
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: const Color(0xFF1A1D1F),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                ProfileWidget(
+                                  title: "Tên chủ TK",
+                                  value: user.name,
                                 ),
-                                onSuffixTap: () => idCardController.clear(),
-                              ),
-                              const SizedBox(height: 12),
-                              CustomBox(
-                                controller: dateController,
-                                label: "Ngày cấp",
-                                suffix: GestureDetector(
-                                  onTap: () =>
-                                      _showCupertinoDatePicker(context),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/calender.svg",
+                                ProfileWidget(
+                                  title: "Giới Tính",
+                                  value: user.sex ?? "",
+                                ),
+                                ProfileWidget(
+                                  title: "Ngày Sinh",
+                                  value: user.dob ?? "",
+                                ),
+                                CustomBox(
+                                  controller: idCardController,
+                                  label: "Số CMND/CCCD/HC",
+                                  suffix: SvgPicture.asset(
+                                    "assets/icons/delete.svg",
+                                  ),
+                                  onSuffixTap: () => idCardController.clear(),
+                                ),
+                                const SizedBox(height: 12),
+                                CustomBox(
+                                  controller: dateController,
+                                  label: "Ngày cấp",
+                                  suffix: GestureDetector(
+                                    onTap: () =>
+                                        _showCupertinoDatePicker(context),
+                                    child: SvgPicture.asset(
+                                      "assets/icons/calender.svg",
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              CustomBox(
-                                controller: placeController,
-                                label: "Nơi cấp",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
-                                ),
-                                onSuffixTap: () => placeController.clear(),
-                              ),
-                              // Hiện cảnh báo nếu thay đổi
-                              if (hasChanged) ...[
                                 const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        "Bạn cần cung cấp ảnh để xác thực thông tin CMND/CCCD vừa thay đổi.",
-                                        style: GoogleFonts.manrope(
-                                          color: const Color(0xFFFF9F41),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Stack(
-                                      alignment: Alignment.center,
+                                CustomBox(
+                                  controller: placeController,
+                                  label: "Nơi cấp",
+                                  suffix: SvgPicture.asset(
+                                    "assets/icons/delete.svg",
+                                  ),
+                                  onSuffixTap: () => placeController.clear(),
+                                ),
+                                if (hasChanged)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Row(
                                       children: [
-                                        Container(
-                                          height: 36,
-                                          width: 77,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
+                                        Expanded(
+                                          child: Text(
+                                            "Bạn cần cung cấp ảnh để xác thực thông tin CMND/CCCD vừa thay đổi.",
+                                            style: GoogleFonts.manrope(
+                                              color: const Color(0xFFFF9F41),
+                                              fontSize: 12,
                                             ),
-                                            color: const Color(
-                                              0xFF1AAF74,
-                                            ).withAlpha(10),
                                           ),
                                         ),
-                                        SvgPicture.asset(
-                                          "assets/icons/camera.svg",
+                                        const SizedBox(width: 12),
+                                        Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              height: 36,
+                                              width: 77,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: const Color(
+                                                  0xFF1AAF74,
+                                                ).withAlpha(10),
+                                              ),
+                                            ),
+                                            SvgPicture.asset(
+                                              "assets/icons/camera.svg",
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          // 🔹 Container thông tin liên hệ
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: const Color(0xFF1A1D1F),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomBox(
+                                  controller: addressController,
+                                  label: "Địa chỉ liên hệ",
+                                  suffix: SvgPicture.asset(
+                                    "assets/icons/delete.svg",
+                                  ),
+                                  onSuffixTap: () => addressController.clear(),
+                                  minLines: 1,
+                                ),
+                                const SizedBox(height: 12),
+                                CustomBox(
+                                  controller: cityController,
+                                  label: "Tỉnh/Thành phố",
+                                  suffix: SvgPicture.asset(
+                                    "assets/icons/delete.svg",
+                                  ),
+                                  onSuffixTap: () => cityController.clear(),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "Điện thoại di động",
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF272B30),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "+84",
+                                        style: GoogleFonts.manrope(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 1,
+                                        height: 16,
+                                        color: Colors.grey.shade600,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: phoneController,
+                                          keyboardType: TextInputType.phone,
+                                          style: GoogleFonts.manrope(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                          decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.zero,
+                                            hintText: "Nhập số điện thoại",
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => phoneController.clear(),
+                                        child: SvgPicture.asset(
+                                          "assets/icons/delete.svg",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                CustomBox(
+                                  controller: gmailController,
+                                  label: "Email",
+                                  suffix: SvgPicture.asset(
+                                    "assets/icons/delete.svg",
+                                  ),
+                                  onSuffixTap: () => gmailController.clear(),
                                 ),
                               ],
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // ====== Second Box: Contact Info ======
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color(0xFF1A1D1F),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
+                          const SizedBox(height: 34),
+                          // 🔹 Nút Huỷ/Lưu
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CustomBox(
-                                controller: addressController,
-                                label: "Địa chỉ liên hệ",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(170, 48),
+                                  backgroundColor: const Color(0xFF111315),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                onSuffixTap: () => addressController.clear(),
-                                minLines: 1,
+                                child: Text(
+                                  "Huỷ",
+                                  style: GoogleFonts.manrope(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 12),
-                              CustomBox(
-                                controller: cityController,
-                                label: "Tỉnh/Thành phố",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
+                              const SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if ([
+                                    idCardController,
+                                    dateController,
+                                    placeController,
+                                    addressController,
+                                    cityController,
+                                    phoneController,
+                                    gmailController,
+                                  ].any((c) => c.text.isEmpty)) {
+                                    final overlay = Overlay.of(context);
+                                    final overlayEntry = OverlayEntry(
+                                      builder: (context) => Positioned(
+                                        top: 70,
+                                        left: 20,
+                                        right: 20,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                              horizontal: 16,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.redAccent
+                                                  .withOpacity(0.9),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.error_outline,
+                                                  color: Colors.white,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  "Vui Lòng Điền Hết Ô Trống",
+                                                  style: GoogleFonts.manrope(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    overlay.insert(overlayEntry);
+                                    Future.delayed(
+                                      const Duration(seconds: 2),
+                                      () => overlayEntry.remove(),
+                                    );
+                                  } else {
+                                    context.read<UserCubit>().updateUser(
+                                      User(
+                                        name: user.name ?? "",
+                                        sex: user.sex ?? "",
+                                        dob: user.dob ?? "",
+                                        idCard: idCardController.text,
+                                        date: dateController.text,
+                                        placeID: placeController.text,
+                                        contactAdress: addressController.text,
+                                        city: cityController.text,
+                                        phone: phoneController.text,
+                                        email: gmailController.text,
+                                      ),
+                                    );
+                                    context.pop();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(170, 48),
+                                  backgroundColor: const Color(0xFF1AAF74),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                onSuffixTap: () => cityController.clear(),
-                              ),
-                              const SizedBox(height: 12),
-                              CustomBox(
-                                controller: phoneController,
-                                label: "Điện thoại di động",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
+                                child: Text(
+                                  "Lưu thông tin",
+                                  style: GoogleFonts.manrope(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                onSuffixTap: () => phoneController.clear(),
-                              ),
-                              const SizedBox(height: 12),
-                              CustomBox(
-                                controller: gmailController,
-                                label: "Email",
-                                suffix: SvgPicture.asset(
-                                  "assets/icons/delete.svg",
-                                ),
-                                onSuffixTap: () => gmailController.clear(),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 34),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(170, 48),
-                              backgroundColor: const Color(0xFF111315),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Huỷ",
-                              style: GoogleFonts.manrope(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(170, 48),
-                              backgroundColor: const Color(0xFF1AAF74),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            onPressed: () {
-                              context.read<UserCubit>().updateUser(
-                                User(
-                                  name: user.name ?? "",
-                                  sex: user.sex ?? "",
-                                  dob: user.dob ?? " ",
-                                  idCard: idCardController.text,
-                                  date: dateController.text,
-                                  placeID: placeController.text,
-                                  contactAdress: addressController.text,
-                                  city: cityController.text,
-                                  phone: phoneController.text,
-                                  email: gmailController.text,
-                                ),
-                              );
-                              context.pop();
-                            },
-                            child: Text(
-                              "Lưu thông tin",
-                              style: GoogleFonts.manrope(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 24),
                         ],
                       ),
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

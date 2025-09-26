@@ -56,7 +56,7 @@ class _CustomBoxState extends State<CustomBox> {
         Text(
           widget.label,
           style: GoogleFonts.manrope(
-            color: hasError ? Colors.red : Colors.white70,
+            color: hasError ? Colors.red : const Color(0xFFEFEFEF),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -70,13 +70,13 @@ class _CustomBoxState extends State<CustomBox> {
               color: hasError
                   ? Colors.red
                   : isFocused
-                  ? const Color(0xFF1AAF74)
-                  : Colors.transparent,
+                      ? const Color(0xFF1AAF74)
+                      : Colors.transparent,
               width: 2,
             ),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, // 👈 Căn giữa icon
             children: [
               Expanded(
                 child: TextField(
@@ -86,7 +86,7 @@ class _CustomBoxState extends State<CustomBox> {
                   minLines: widget.minLines,
                   maxLines: null,
                   style: GoogleFonts.manrope(
-                    color: Colors.white,
+                    color: const Color(0xFFEFEFEF),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -104,7 +104,7 @@ class _CustomBoxState extends State<CustomBox> {
                 GestureDetector(
                   onTap: widget.onSuffixTap,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 12), // 👈 bỏ top để icon căn giữa
                     child: widget.suffix!,
                   ),
                 ),

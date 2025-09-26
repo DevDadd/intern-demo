@@ -7,12 +7,14 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final String name;
   final String avatarPath;
+  final double collapsedInfoShift; // 👈 mới thêm
 
   ProfileHeaderDelegate({
     required this.maxHeight,
     required this.minHeight,
     required this.name,
     required this.avatarPath,
+    this.collapsedInfoShift = 0, // default = 0
   });
 
   @override
@@ -35,43 +37,57 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     double avatarSize = 120 * factor + 80;
 
+    // Avatar ngang
     double avatarLeft =
         (screenWidth / 2 - avatarSize / 2) * factor + 16 * (1 - factor);
 
+    // Avatar top
     double avatarTopExpanded = topPadding + 100;
-    double avatarTopCollapsed = topPadding + (minHeight - avatarSize) / 2;
+    double avatarTopCollapsed = topPadding + 60;
     double avatarTop =
         avatarTopExpanded * factor + avatarTopCollapsed * (1 - factor);
 
-    double infoWidth = 200; 
-    double infoLeftExpanded = (screenWidth - infoWidth) / 2;
-    double infoLeftCollapsed = avatarLeft + avatarSize + 20;
-    double infoLeft =
-        infoLeftExpanded * factor + infoLeftCollapsed * (1 - factor);
+    // Info block width
+    double infoWidth = 200;
+    double infoLeft = (screenWidth - infoWidth) / 2;
 
-    double infoTopExpanded = avatarTop + avatarSize + 8;
-    double infoTopCollapsed = avatarTop + (avatarSize - 70) / 2;
-    double infoTop = infoTopExpanded * factor + infoTopCollapsed * (1 - factor);
+    // Name height (approx font size 24)
+    double nameHeight = 28;
 
-    double nameFontSize = 24 + (24 - 24) * factor;
+    double spacing = 4 + (16 - 4) * factor;
 
-    CrossAxisAlignment infoAlignment = factor > 0.5
-        ? CrossAxisAlignment.center
-        : CrossAxisAlignment.start;
+
+    // Row height (ID + trạng thái)
+    double rowHeight = 20;
+
+    // Tổng chiều cao block info
+    double infoBlockHeight = nameHeight + spacing + rowHeight;
+
+    // Expanded & Collapsed top
+    double blockTopExpanded = avatarTop + avatarSize + 20;
+    double blockTopCollapsed = avatarTop + (avatarSize - infoBlockHeight) / 2;
+
+    double blockTop =
+        blockTopExpanded * factor + blockTopCollapsed * (1 - factor);
+
+    // 👉 left position riêng cho ID + trạng thái
+    double idBlockLeft =
+        infoLeft * factor + (infoLeft + collapsedInfoShift) * (1 - factor);
 
     return Stack(
       fit: StackFit.expand,
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF111315),
-            image: const DecorationImage(
+          decoration: const BoxDecoration(
+            color: Color(0xFF111315),
+            image: DecorationImage(
               image: AssetImage("assets/bgtheme.png"),
               fit: BoxFit.cover,
             ),
           ),
         ),
 
+        // AppBar
         Positioned(
           top: 0,
           left: 0,
@@ -114,6 +130,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
 
+        // Avatar
         Positioned(
           left: avatarLeft,
           top: avatarTop,
@@ -131,53 +148,61 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
 
+        // 👉 Name riêng
         Positioned(
           left: infoLeft,
-          top: infoTop,
-          child: Column(
-            crossAxisAlignment: infoAlignment,
-            children: [
-              Text(
-                name,
-                style: GoogleFonts.manrope(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: nameFontSize,
+          top: blockTop,
+          child: SizedBox(
+            width: infoWidth,
+            child: Text(
+              name,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.manrope(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
+              ),
+            ),
+          ),
+        ),
+
+        // 👉 ID + trạng thái riêng (dịch trái/phải khi collapse)
+        Positioned(
+          left: idBlockLeft,
+          top: blockTop + nameHeight + spacing,
+          child: SizedBox(
+            width: infoWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "0C99231321",
+                  style: GoogleFonts.manrope(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "0C99231321",
-                    style: GoogleFonts.manrope(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                const SizedBox(width: 8),
+                Container(
+                  height: 6,
+                  width: 6,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFF1AAF74),
                   ),
-                  const SizedBox(width: 8),
-                  Container(
-                    height: 6,
-                    width: 6,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFF1AAF74),
-                    ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Đang hoạt động",
+                  style: GoogleFonts.manrope(
+                    color: Color(0xFF1AAF74),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Đang hoạt động",
-                    style: GoogleFonts.manrope(
-                      color: const Color(0xFF1AAF74),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -189,6 +214,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     return name != oldDelegate.name ||
         avatarPath != oldDelegate.avatarPath ||
         maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight;
+        minHeight != oldDelegate.minHeight ||
+        collapsedInfoShift != oldDelegate.collapsedInfoShift;
   }
 }
