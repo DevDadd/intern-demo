@@ -7,14 +7,14 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final String name;
   final String avatarPath;
-  final double collapsedInfoShift; // 👈 mới thêm
+  final double collapsedInfoShift;
 
   ProfileHeaderDelegate({
     required this.maxHeight,
     required this.minHeight,
     required this.name,
     required this.avatarPath,
-    this.collapsedInfoShift = 0, // default = 0
+    this.collapsedInfoShift = 0, 
   });
 
   @override
@@ -37,40 +37,32 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     double avatarSize = 120 * factor + 80;
 
-    // Avatar ngang
     double avatarLeft =
         (screenWidth / 2 - avatarSize / 2) * factor + 16 * (1 - factor);
 
-    // Avatar top
     double avatarTopExpanded = topPadding + 100;
     double avatarTopCollapsed = topPadding + 60;
     double avatarTop =
         avatarTopExpanded * factor + avatarTopCollapsed * (1 - factor);
 
-    // Info block width
     double infoWidth = 200;
     double infoLeft = (screenWidth - infoWidth) / 2;
 
-    // Name height (approx font size 24)
     double nameHeight = 28;
 
     double spacing = 4 + (16 - 4) * factor;
 
 
-    // Row height (ID + trạng thái)
     double rowHeight = 20;
 
-    // Tổng chiều cao block info
     double infoBlockHeight = nameHeight + spacing + rowHeight;
 
-    // Expanded & Collapsed top
     double blockTopExpanded = avatarTop + avatarSize + 20;
     double blockTopCollapsed = avatarTop + (avatarSize - infoBlockHeight) / 2;
 
     double blockTop =
         blockTopExpanded * factor + blockTopCollapsed * (1 - factor);
 
-    // 👉 left position riêng cho ID + trạng thái
     double idBlockLeft =
         infoLeft * factor + (infoLeft + collapsedInfoShift) * (1 - factor);
 

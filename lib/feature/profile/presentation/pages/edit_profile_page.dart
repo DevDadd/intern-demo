@@ -46,7 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   late ScrollController _scrollController;
 
-  final double collapsedOffset = 210.0; // minHeight của ProfileHeaderDelegate
+  final double collapsedOffset = 210.0; 
 
   @override
   void initState() {
@@ -166,30 +166,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void _handleSnap() {
-    if (!_scrollController.hasClients) return;
+void _handleSnap() {
+  if (!_scrollController.hasClients) return;
 
-    final current = _scrollController.position.pixels;
-    const double tolerance = 10.0; // dung sai
-    final double targetCollapsed = collapsedOffset + 30; // thêm 10px xuống nữa
+  final current = _scrollController.position.pixels;
+  final double targetCollapsed = collapsedOffset + 30; 
+  final double targetExpanded = -1;
 
-    if (current < collapsedOffset / 2) {
-      // Snap về expanded
-      _scrollController.animateTo(
-        0,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-      );
-    } else if (current >= collapsedOffset / 2 && current < targetCollapsed) {
-      // Snap về collapsed + 10px
-      _scrollController.animateTo(
-        targetCollapsed,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-      );
-    }
-    // Nếu scroll vượt quá targetCollapsed → để kéo tiếp bình thường
+  if (current > targetCollapsed / 2 && current < targetCollapsed) {
+    _scrollController.animateTo(
+      targetCollapsed,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOut,
+    );
+  } else if (current <= targetCollapsed / 2) {
+    _scrollController.animateTo(
+      targetExpanded,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOut,
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +227,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Column(
                         children: [
-                          // 🔹 Container CMND/CCCD
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -321,7 +318,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          // 🔹 Container thông tin liên hệ
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -427,7 +423,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                           ),
                           const SizedBox(height: 34),
-                          // 🔹 Nút Huỷ/Lưu
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

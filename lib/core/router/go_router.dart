@@ -6,7 +6,6 @@ import 'package:interndemo/feature/profile/cubit/user_cubit.dart';
 import 'package:interndemo/feature/profile/data/model/user.dart';
 import 'package:interndemo/feature/profile/presentation/pages/edit_profile_page.dart';
 import 'package:interndemo/feature/profile/presentation/pages/profile_page.dart';
-import 'package:interndemo/feature/profile/presentation/pages/test_animation.dart';
 
 class AppRouteConstant {
   AppRouteConstant._();

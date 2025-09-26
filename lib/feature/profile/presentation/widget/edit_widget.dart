@@ -76,7 +76,7 @@ class _CustomBoxState extends State<CustomBox> {
             ),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center, // 👈 Căn giữa icon
+            crossAxisAlignment: CrossAxisAlignment.center, 
             children: [
               Expanded(
                 child: TextField(
@@ -104,7 +104,7 @@ class _CustomBoxState extends State<CustomBox> {
                 GestureDetector(
                   onTap: widget.onSuffixTap,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 12), // 👈 bỏ top để icon căn giữa
+                    padding: const EdgeInsets.only(right: 12),
                     child: widget.suffix!,
                   ),
                 ),

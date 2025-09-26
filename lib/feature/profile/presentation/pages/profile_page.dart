@@ -18,14 +18,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late ScrollController _scrollController;
-  final double collapsedOffset = 210.0; // minHeight của header
+  final double collapsedOffset = 210.0;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
 
-    // fake user
     context.read<UserCubit>().addUser(
       User(
         name: "Vladimir Putin",
@@ -57,14 +56,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final min = _scrollController.position.minScrollExtent;
 
     if (current < (max - min) / 2) {
-      // snap về đầu
       _scrollController.animateTo(
         min,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
     } else {
-      // snap về cuối (đảm bảo header collapse)
       _scrollController.animateTo(
         max,
         duration: const Duration(milliseconds: 300),
@@ -103,7 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Column(
                       children: [
-                        // container màu xám
                         Container(
                           width: double.infinity,
                           margin: const EdgeInsets.only(top: 16),
@@ -166,7 +162,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                // Khoảng trống dưới để snap header về collapsed đúng chuẩn
                 SliverToBoxAdapter(
                   child: SizedBox(height: 400 - collapsedOffset - 190),
                 ),
